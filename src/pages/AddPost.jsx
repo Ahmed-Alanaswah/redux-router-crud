@@ -3,11 +3,12 @@ import { Form, Button } from "react-bootstrap";
 import { addPosts } from "../state/postSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import Loading from "../components/Loading";
 
 const AddPost = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { records } = useSelector((state) => state.posts);
+  const { loading, error } = useSelector((state) => state.posts);
   const [titele, setTitele] = useState("");
   const [description, setDescription] = useState("");
   const formHandler = (e) => {
@@ -15,8 +16,10 @@ const AddPost = () => {
 
     console.log(titele);
     console.log(description);
-    dispatch(addPosts({ titele, description }));
-    navigate("/");
+    dispatch(addPosts({ titele, description }))
+      .unwrap()
+      .then(() => navigate("/"))
+      .catch((err) => console.log(err));
   };
   return (
     <Form onSubmit={formHandler}>
@@ -37,9 +40,11 @@ const AddPost = () => {
           rows={3}
         />
       </Form.Group>
-      <Button variant="primary" type="submit">
-        add post
-      </Button>
+      <Loading loading={loading} error={error}>
+        <Button variant="primary" type="submit">
+          add post
+        </Button>
+      </Loading>
     </Form>
   );
 };
