@@ -1,19 +1,24 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PostList from "../components/PostList";
-import { fetchPosts } from "../state/postSlice";
+import { fetchPosts, deletePosts } from "../state/postSlice";
+import Loading from "../components/Loading";
 
 const Index = () => {
   const dispatch = useDispatch();
-  const posts = useSelector((state) => state.posts);
+  const { records, loading, error } = useSelector((state) => state.posts);
+
+  const deletePost = useCallback((id) => dispatch(deletePosts(id)), [dispatch]);
 
   useEffect(() => {
-    dispatch(fetchPosts);
+    console.log("triggered");
+    dispatch(fetchPosts());
   }, [dispatch]);
+
   return (
-    <div>
-      <PostList />
-    </div>
+    <Loading loading={loading} error={error}>
+      <PostList data={records} deletePost={deletePost} />
+    </Loading>
   );
 };
 

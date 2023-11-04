@@ -1,7 +1,8 @@
-import React from "react";
-import { Table, Button, ButtonGroup } from "react-bootstrap";
+import React, { memo } from "react";
+import { Table } from "react-bootstrap";
+import PostListItem from "./PostListItem";
 
-const PostList = ({ data }) => {
+const PostList = ({ data, deletePost }) => {
   return (
     <Table striped bordered hover>
       <thead>
@@ -12,19 +13,10 @@ const PostList = ({ data }) => {
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>#1</td>
-          <td>this is title 1</td>
-          <td>
-            <ButtonGroup aria-label="Basic example">
-              <Button variant="success">Edit</Button>
-              <Button variant="danger">Delete</Button>
-            </ButtonGroup>
-          </td>
-        </tr>
+        <PostListItem data={data} deletePost={deletePost} />
       </tbody>
     </Table>
   );
 };
 
-export default PostList;
+export default memo(PostList);
