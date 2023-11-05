@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-const initialState = { records: [], loading: false, error: null };
+const initialState = { records: [], loading: false, error: null, record: null };
 
 export const fetchPosts = createAsyncThunk(
   "posts/fetchPosts",
@@ -16,7 +16,22 @@ export const fetchPosts = createAsyncThunk(
     }
   }
 );
+export const fetchPost = createAsyncThunk(
+  "posts/fetchPost",
+  async (id, thunkAPI) => {
+    console.log("//////", id);
 
+    const { rejectWithValue } = thunkAPI;
+
+    try {
+      const res = await fetch(`http://localhost:5000/posts/${id}`);
+      const data = await res.json();
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 export const deletePosts = createAsyncThunk(
   "posts/deletePosts",
   async (id, thunkAPI) => {
@@ -46,10 +61,9 @@ export const addPosts = createAsyncThunk(
         body: JSON.stringify(item),
         headers: { "Content-type": "application/json;charset=UTF-8" },
       });
-      console.log("===data==", data);
+
       const data = await res.json();
 
-      console.log("===data==", data);
       return data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -74,6 +88,26 @@ const postSlice = createSlice({
       })
       .addCase(
         fetchPosts.rejected,
+
+        (state, action) => {
+          state.loading = false;
+          state.error = action.payload;
+        }
+      );
+
+    //fetch post
+    builder
+      .addCase(fetchPost.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.record = null;
+      })
+      .addCase(fetchPost.fulfilled, (state, action) => {
+        state.loading = false;
+        state.record = action.payload;
+      })
+      .addCase(
+        fetchPost.rejected,
 
         (state, action) => {
           state.loading = false;

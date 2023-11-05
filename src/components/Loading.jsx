@@ -1,7 +1,7 @@
 import { cloneElement } from "react";
 
 const Loading = ({ loading, error, children }) => {
-  const elementType = children.type.render?.displayName;
+  const elementType = children?.type?.render?.displayName;
   console.log(elementType);
 
   const renderElement = () => {

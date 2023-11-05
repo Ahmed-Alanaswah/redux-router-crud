@@ -24,7 +24,7 @@ const AddPost = () => {
   return (
     <Form onSubmit={formHandler}>
       <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-        <Form.Label>Titele</Form.Label>
+        <Form.Label>Title</Form.Label>
         <Form.Control
           value={titele}
           onChange={(e) => setTitele(e.target.value)}
@@ -32,7 +32,7 @@ const AddPost = () => {
         />
       </Form.Group>
       <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-        <Form.Label>Deleteescription</Form.Label>
+        <Form.Label>Description</Form.Label>
         <Form.Control
           value={description}
           onChange={(e) => setDescription(e.target.value)}
