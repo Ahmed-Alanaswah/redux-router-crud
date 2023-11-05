@@ -6,12 +6,24 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import RoootLayout from "./pages/RoootLayout";
 import AddPost from "./pages/AddPost";
-import Edit from "./pages/Edit";
+import EditPost from "./pages/EditPost";
 import Detail from "./pages/Details";
 import Index from "./pages/Index";
 import ErrorPage from "./pages/ErrorPage";
 import { Provider } from "react-redux";
 import store from "./state";
+
+const postParamHandler = async (data) => {
+  if (isNaN(data.params.id)) {
+    throw new Response("Bad Request", {
+      statusText: "please make sure to insert correct post id",
+      status: 400,
+    });
+  }
+  const postId = parseInt(data.params.id);
+
+  return postId;
+};
 
 const router = createBrowserRouter([
   {
@@ -22,21 +34,15 @@ const router = createBrowserRouter([
       { index: true, element: <Index /> },
       { path: "post", element: <Index /> },
       { path: "post/add", element: <AddPost /> },
-      { path: "post/:id/edit", element: <Edit /> },
+      {
+        path: "post/:id/edit",
+        element: <EditPost />,
+        loader: postParamHandler,
+      },
       {
         path: "post/:id",
         element: <Detail />,
-        loader: async (data) => {
-          if (isNaN(data.params.id)) {
-            throw new Response("Bad Request", {
-              statusText: "please make sure to insert correct post id",
-              status: 400,
-            });
-          }
-          const postId = parseInt(data.params.id);
-
-          return postId;
-        },
+        loader: postParamHandler,
       },
     ],
   },

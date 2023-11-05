@@ -11,13 +11,19 @@ const PostListItem = ({ data, deletePost }) => {
   };
 
   const record = data.map((el, idx) => (
-    <tr key={el.id} onClick={() => navigate(`post/${el.id}`)}>
+    <tr key={el.id}>
       <td>{++idx}</td>
-      <td>{el.titele}</td>
+
+      <td onClick={() => navigate(`post/${el.id}`)}>{el.titele}</td>
       <td>{el.description}</td>
       <td>
         <ButtonGroup aria-label="Basic example">
-          <Button variant="success">Edit</Button>
+          <Button
+            variant="success"
+            onClick={() => navigate(`post/${el.id}/edit`)}
+          >
+            Edit
+          </Button>
           <Button variant="danger" onClick={deleteHandler}>
             Delete
           </Button>

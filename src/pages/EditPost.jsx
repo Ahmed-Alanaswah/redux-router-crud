@@ -1,24 +1,41 @@
-import React, { useState } from "react";
-import { Form, Button } from "react-bootstrap";
-import { addPosts } from "../state/postSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import usePostDetails from "../hooks/use-post-details";
 import Loading from "../components/Loading";
+import { Form, Button } from "react-bootstrap";
+import { useDispatch } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { updatePost } from "../state/postSlice";
+const EditPost = () => {
+  const { id } = useParams();
+  const { loading, error, record } = usePostDetails();
 
-const AddPost = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { loading, error } = useSelector((state) => state.posts);
   const [titele, setTitele] = useState("");
   const [description, setDescription] = useState("");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const formHandler = (e) => {
     e.preventDefault();
 
-    dispatch(addPosts({ titele, description }))
+    dispatch(updatePost({ id, titele, description }))
       .unwrap()
       .then(() => navigate("/"))
       .catch((err) => console.log(err));
   };
+
+  useEffect(() => {
+    if (record) {
+      setTitele(record?.titele);
+      setDescription(record?.description);
+    }
+  }, [record]);
+
+  useEffect(() => {
+    return () => {
+      dispatch({ type: "posts/cleanRecored" });
+    };
+  }, [dispatch]);
+  console.log(titele);
   return (
     <Form onSubmit={formHandler}>
       <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
@@ -41,10 +58,10 @@ const AddPost = () => {
       <Loading loading={loading} error={error}>
         <Button variant="primary" type="submit">
           add post
-        </Button>
+        </Button>{" "}
       </Loading>
     </Form>
   );
 };
 
-export default AddPost;
+export default EditPost;

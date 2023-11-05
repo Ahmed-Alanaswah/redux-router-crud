@@ -19,8 +19,6 @@ export const fetchPosts = createAsyncThunk(
 export const fetchPost = createAsyncThunk(
   "posts/fetchPost",
   async (id, thunkAPI) => {
-    console.log("//////", id);
-
     const { rejectWithValue } = thunkAPI;
 
     try {
@@ -70,11 +68,36 @@ export const addPosts = createAsyncThunk(
     }
   }
 );
+export const updatePost = createAsyncThunk(
+  "posts/updatePost",
+  async (item, thunkAPI) => {
+    const { rejectWithValue, getState } = thunkAPI;
+    const { auth } = getState();
+    item.userId = auth.id;
+    try {
+      const res = await fetch(`http://localhost:5000/posts/${item.id}`, {
+        method: "PATCH",
+        body: JSON.stringify(item),
+        headers: { "Content-type": "application/json;charset=UTF-8" },
+      });
+
+      const data = await res.json();
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
 const postSlice = createSlice({
   name: "posts",
   initialState,
-  reducers: {},
+  reducers: {
+    cleanRecored: (state) => {
+      state.record = null;
+    },
+  },
   extraReducers: (builder) => {
     //fetch posts
     builder
@@ -142,7 +165,6 @@ const postSlice = createSlice({
       .addCase(addPosts.fulfilled, (state, action) => {
         state.loading = false;
 
-        console.log("********", action.payload);
         state.records.push(action.payload);
       })
       .addCase(
@@ -153,6 +175,22 @@ const postSlice = createSlice({
           state.error = action.payload;
         }
       );
+
+    //update posts
+    builder
+      .addCase(updatePost.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updatePost.fulfilled, (state, action) => {
+        state.loading = false;
+
+        state.record = action.payload;
+      })
+      .addCase(updatePost.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
   },
 });
 

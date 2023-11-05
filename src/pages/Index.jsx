@@ -11,7 +11,6 @@ const Index = () => {
   const deletePost = useCallback((id) => dispatch(deletePosts(id)), [dispatch]);
 
   useEffect(() => {
-    console.log("triggered");
     dispatch(fetchPosts());
   }, [dispatch]);
 
