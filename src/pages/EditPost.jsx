@@ -4,7 +4,8 @@ import Loading from "../components/Loading";
 import { Form, Button } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { updatePost } from "../state/postSlice";
+import { updatePost, cleanRecored } from "../store/postSlice";
+
 const EditPost = () => {
   const { id } = useParams();
   const { loading, error, record } = usePostDetails();
@@ -32,10 +33,10 @@ const EditPost = () => {
 
   useEffect(() => {
     return () => {
-      dispatch({ type: "posts/cleanRecored" });
+      dispatch(cleanRecored);
     };
   }, [dispatch]);
-  console.log(titele);
+
   return (
     <Form onSubmit={formHandler}>
       <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
@@ -58,7 +59,7 @@ const EditPost = () => {
       <Loading loading={loading} error={error}>
         <Button variant="primary" type="submit">
           add post
-        </Button>{" "}
+        </Button>
       </Loading>
     </Form>
   );

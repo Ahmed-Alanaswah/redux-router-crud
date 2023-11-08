@@ -11,7 +11,7 @@ import Detail from "./pages/Details";
 import Index from "./pages/Index";
 import ErrorPage from "./pages/ErrorPage";
 import { Provider } from "react-redux";
-import store from "./state";
+import store from "./store";
 
 const postParamHandler = async (data) => {
   if (isNaN(data.params.id)) {
@@ -47,6 +47,8 @@ const router = createBrowserRouter([
     ],
   },
 ]);
+
+console.log("========");
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

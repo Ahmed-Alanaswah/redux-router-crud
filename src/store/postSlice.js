@@ -194,4 +194,6 @@ const postSlice = createSlice({
   },
 });
 
+export const { cleanRecored } = postSlice.actions;
+
 export default postSlice.reducer;

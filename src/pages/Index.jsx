@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PostList from "../components/PostList";
-import { fetchPosts, deletePosts } from "../state/postSlice";
+import { fetchPosts, deletePosts } from "../store/postSlice";
 import Loading from "../components/Loading";
 
 const Index = () => {
